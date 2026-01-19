@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:18
+    restart: always # 意図せず停止した場合、常に自動で再起動する設定
+    environment:
+      POSTGRES_DB: sns_4_illustrators_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      TZ: Asia/Tokyo
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql
+    # DBが接続可能かチェックする設定
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d sns_4_illustrators_db"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  server:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/server
+      - ./uploads:/server/uploads
+    environment:
+      DB_HOST: db
+      DB_USER: user
+      DB_PASS: password
+      DB_NAME: sns_4_illustrators_db
+      DB_PORT: "5432"
+      TZ: Asia/Tokyo
+    # DBが正常な状態になるまで待機
+    depends_on:
+      db:
+        condition: service_healthy
+
+# コンテナのライフサイクルに依存しないデータの永続化
+volumes:
+  db-data:
