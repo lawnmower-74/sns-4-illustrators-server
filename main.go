@@ -2,20 +2,21 @@ package main
 
 import (
 	"sns-4-illustrators-server/database"
+	"sns-4-illustrators-server/handlers"
 	"github.com/gin-gonic/gin"
 )
 
 func main() {
-	// セットアップ（マイグレーション）
+	// DBセットアップ（マイグレーション）
 	database.InitDB()
 
 	r := gin.Default()
 	
-	// ルーティング設定（ここにアップロード処理などを書く）
-	// 今後はここも「handlers」などのフォルダに分けていくとさらに綺麗になります
-	r.POST("/upload", func(c *gin.Context) {
-		// database.DB を使って保存処理...
-	})
+	// 静的ファイルの配信（ブラウザから画像を見れるようにする）
+	r.Static("/view-images", "./uploads")
+
+	// ルーティング
+	r.POST("/upload", handlers.UploadImage)
 
 	r.Run(":8080")
 }
