@@ -14,6 +14,9 @@ func main() {
 	router := gin.Default()
 
 	pprof.Register(router)
+
+	// http://127.0.0.1:8080/uploads/file_name にアクセスすると、./uploads/file_name のファイルを返す
+	router.Static("/uploads", "./uploads")
 	
 	// ルーティング
 	router.POST("/upload", handlers.UploadImage)
