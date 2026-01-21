@@ -12,11 +12,9 @@ func main() {
 
 	r := gin.Default()
 	
-	// 静的ファイルの配信（ブラウザから画像を見れるようにする）
-	r.Static("/view-images", "./uploads")
-
 	// ルーティング
 	r.POST("/upload", handlers.UploadImage)
+	r.GET("/images", handlers.GetImages)
 
 	r.Run(":8080")
 }
