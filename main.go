@@ -4,17 +4,20 @@ import (
 	"sns-4-illustrators-server/database"
 	"sns-4-illustrators-server/handlers"
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/pprof"
 )
 
 func main() {
 	// DBセットアップ（マイグレーション）
 	database.InitDB()
 
-	r := gin.Default()
+	router := gin.Default()
+
+	pprof.Register(router)
 	
 	// ルーティング
-	r.POST("/upload", handlers.UploadImage)
-	r.GET("/images", handlers.GetImages)
+	router.POST("/upload", handlers.UploadImage)
+	router.GET("/images", handlers.GetImages)
 
-	r.Run(":8080")
+	router.Run(":8080")
 }

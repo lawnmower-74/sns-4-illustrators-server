@@ -30,6 +30,18 @@ docker-compose run --rm server go run main.go
 docker-compose run --rm server go build -o test_bin .
 ```
 
+```bash
+# 起動中のコンテナ内で pprof を実行（パフォーマンス・負荷状況をグラフ形式で確認できる）
+docker exec -it コンテナID go tool pprof -http=0.0.0.0:8081 http://localhost:8080/debug/pprof/profile?seconds=10
+
+# コンテナIDは以下で確認可能
+docker ps
+
+# 1. seconds 秒内にアップロードなど計測したい処理を実行
+# 2. http://localhost:8081 にアクセスし、ダウンロード
+# 3. https://www.speedscope.app/ にアップ（こっちのほうが見やすい）
+```
+
 
 # 開発時に発生したエラーと対処
 
